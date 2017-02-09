@@ -1,0 +1,116 @@
+-- vim :ts=4 sw=4 noet ai cindent syntax=lua
+--[[
+# Conky, a system monitor, based on torsmo
+#
+# Any original torsmo code is licensed under the BSD license
+#
+# All code written since the fork of torsmo is licensed under the GPL
+#
+# Please see COPYING for details
+#
+# Copyright (c) 2004, Hannu Saransaari and Lauri Hakkarainen
+# Copyright (c) 2005-2010 Brenden Matthews, Philip Kovacs, et. al. (see AUTHORS)
+# All rights reserved.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# DejaVu Sans Mono characters are ~14 px wide. Time thing on top is 34
+# characters long and 475 px wide cpugraph is the same width.
+]]
+
+conky.config = {
+    alignment = 'top_right',
+    background = true,
+    border_width = 1,
+    cpu_avg_samples = 2,
+    default_color = 'white',
+    default_outline_color = 'black',
+    default_shade_color = 'black',
+    draw_borders = false,
+    draw_graph_borders = true,
+    draw_outline = false,
+    draw_shades = false,
+    use_xft = true,
+    font = 'DejaVu Sans Mono:size=9',
+    gap_x = 5,
+    gap_y = 250,
+    net_avg_samples = 2,
+    no_buffers = true,
+    out_to_console = false,
+    out_to_stderr = false,
+    extra_newline = false,
+    own_window_class = 'Conky',
+    own_window_type = 'desktop',
+    own_window = true,
+    own_window_type = 'normal',
+    own_window_hints = 'undecorated,sticky,skip_taskbar,skip_pager,below',
+    own_window_argb_visual = true,
+    own_window_transparent = false,
+    own_window_argb_value = 0,
+    stippled_borders = 0,
+    update_interval = 1.0,
+    uppercase = false,
+    use_spacer = 'none',
+    show_graph_scale = false,
+    show_graph_range = false,
+    top_cpu_separate = false,
+    top_name_width = 12,
+    temperature_unit = 'fahrenheit',
+}
+
+-- What follows is extremely hackish. Under if_up wlan0, display wlan0 again on
+-- a new line if eth0 is up so that when eth0 is not up, the first wlan0 doesn't
+-- have a newline above it (otherwise, the first wlan0 - essid - ip address line
+-- gets hidden when eth0 is up).
+conky.text = [[
+This is $nodename.
+${exec cat /etc/fedora-release}
+$sysname $kernel $machine
+${hr 2}
+Network
+${if_up wlp2s0}wlp2s0 (${scroll 10 1 ${wireless_essid wlp2s0} - ${wireless_ap wlp2s0}})$alignr${addr wlp2s0}
+Up: ${upspeed wlp2s0}${goto 270}Down: ${downspeed wlp2s0}
+Usage: ${totalup wlp2s0}↑/${totaldown wlp2s0}↓
+${upspeedgraph wlp2s0 40,250 ffffff 0000ff -t} ${downspeedgraph wlp2s0 40,250 ffffff ff0000 -t}${endif}
+${hr 2}
+Weather
+# Current weather conditions. Font width for size 7 font is ~11px.
+${alignc 195}${font conkyweather:size=65}${execpi 600 sed -n '2p' $HOME/.conky_weather/parsed}$font
+${font DejaVu Sans Mono:size=8}${voffset -6}${alignc 195}${execpi 600 sed -n '3p' $HOME/.conky_weather/parsed}
+${font DejaVu Sans Mono:size=7}${voffset -180}${goto 250}${color eeeeee}Temp: $color${alignr}${execpi 600 sed -n '4p' $HOME/.conky_weather/parsed}°F
+${goto 250}${color eeeeee}Wind: $color${alignr}${execpi 600 sed -n '5p' $HOME/.conky_weather/parsed} ${execpi 600 sed -n '7p' $HOME/.conky_weather/parsed}
+${goto 250}${color eeeeee}Hum: $color${alignr}${execpi 600 sed -n '8p' $HOME/.conky_weather/parsed}
+${goto 250}${color eeeeee}Dewpoint: $color${alignr}${execpi 600 sed -n '9p' $HOME/.conky_weather/parsed}°F
+${goto 250}${color eeeeee}Press: $color${alignr}${execpi 600 sed -n '10p' $HOME/.conky_weather/parsed}Hg
+${goto 250}${color eeeeee}Visib: $color${alignr}${execpi 600 sed -n '11p' $HOME/.conky_weather/parsed}
+${goto 250}${color eeeeee}Sunrise: $color${alignr}${execpi 600 sed -n '91p' $HOME/.conky_weather/parsed}
+${goto 250}${color eeeeee}Sunset: $color${alignr}${execpi 600 sed -n '93p' $HOME/.conky_weather/parsed}
+# Time of last update
+${voffset 15}${font DejaVu Sans Mono:size=6}${alignc}Last Update: ${execpi 600 sed -n '1p' $HOME/.conky_weather/parsed}$font
+# Weather forecast for next five periods (days)
+${color eeeeee}${font DejaVu Sans Mono:size=7}${goto 5}${execpi 600 sed -n '13p' $HOME/.conky_weather/parsed}${goto 115}${execpi 600 sed -n '19p' $HOME/.conky_weather/parsed}${goto 225}${execpi 600 sed -n '25p' $HOME/.conky_weather/parsed}${goto 335}${execpi 600 sed -n '31p' $HOME/.conky_weather/parsed}${goto 445}${execpi 600 sed -n '37p' $HOME/.conky_weather/parsed}$font$color
+# Weather forecast icons
+${font conkyweather:size=33}${execpi 600 sed -n '14p' $HOME/.conky_weather/parsed} ${execpi 600 sed -n '20p' $HOME/.conky_weather/parsed} ${execpi 600 sed -n '26p' $HOME/.conky_weather/parsed} ${execpi 600 sed -n '32p' $HOME/.conky_weather/parsed} ${execpi 600 sed -n '38p' $HOME/.conky_weather/parsed}$font
+# First line of text
+${font DejaVu Sans Mono:size=7}${goto 5}${execpi 600 sed -n '15p' $HOME/.conky_weather/parsed}${goto 115}${execpi 600 sed -n '21p' $HOME/.conky_weather/parsed}${goto 225}${execpi 600 sed -n '27p' $HOME/.conky_weather/parsed}${goto 335}${execpi 600 sed -n '33p' $HOME/.conky_weather/parsed}${goto 445}${execpi 600 sed -n '39p' $HOME/.conky_weather/parsed}$font
+# Second line of text
+${voffset -5}${font DejaVu Sans Mono:size=7}${goto 5}${execpi 600 sed -n '16p' $HOME/.conky_weather/parsed}${goto 115}${execpi 600 sed -n '22p' $HOME/.conky_weather/parsed}${goto 225}${execpi 600 sed -n '28p' $HOME/.conky_weather/parsed}${goto 335}${execpi 600 sed -n '34p' $HOME/.conky_weather/parsed}${goto 445}${execpi 600 sed -n '40p' $HOME/.conky_weather/parsed}$font
+# Temperatures
+${font DejaVu Sans Mono:size=7}${goto 5}${execpi 600 sed -n '17p' $HOME/.conky_weather/parsed}°F${goto 115}${execpi 600 sed -n '23p' $HOME/.conky_weather/parsed}°F${goto 225}${execpi 600 sed -n '29p' $HOME/.conky_weather/parsed}°F${goto 335}${execpi 600 sed -n '35p' $HOME/.conky_weather/parsed}°F${goto 445}${execpi 600 sed -n '41p' $HOME/.conky_weather/parsed}°F$font
+${hr 2}
+E-mail
+${execpi 5 /home/dogi/bin/conkyMailcheck}
+${hr 2}
+System Messages
+]]
+conky.text = conky.text .. "${voffset 15}${execi 5 journalctl -b | tail -n5 | sed 's/[a-zA-Z 0-9:]*embryogenesis //g' | sed 's/\\([^]]\\{5\\}\\)[^]]*\\(\\[[0-9]*]:\\)/\\1\\2/g' | cut -c 1-37}\n\n" 
