@@ -109,7 +109,7 @@ ${voffset -5}${font DejaVu Sans Mono:size=7}${goto 5}${execpi 600 sed -n '16p' $
 ${font DejaVu Sans Mono:size=7}${goto 5}${execpi 600 sed -n '17p' $HOME/.conky_weather/parsed}°F${goto 115}${execpi 600 sed -n '23p' $HOME/.conky_weather/parsed}°F${goto 225}${execpi 600 sed -n '29p' $HOME/.conky_weather/parsed}°F${goto 335}${execpi 600 sed -n '35p' $HOME/.conky_weather/parsed}°F${goto 445}${execpi 600 sed -n '41p' $HOME/.conky_weather/parsed}°F$font
 ${hr 2}
 E-mail
-${execpi 5 /home/dogi/bin/conkyMailcheck}
+${execpi 5 /home/me/bin/conkyMailcheck}
 ${hr 2}
 System Messages
 ]]
