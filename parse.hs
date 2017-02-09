@@ -286,7 +286,7 @@ shorten' s = let dist = let svn = ' ' `elemIndex` s
              
 main :: IO ()
 main = do
-    content <- readFile "/home/dogi/.conky_weather/fetched"
+    content <- readFile "/home/me/.conky_weather/fetched"
     let test = decode $ BLL.fromString content :: Maybe Weather
     
     
@@ -331,7 +331,7 @@ main = do
 
     -- Convert the inner List into lines and then the outer one into lines. Convert Maybe String
     -- into a String for writing to file.
-    weatherForecast >>= (\x -> let y = x >>= (\z -> return $ unlines $ map unlines z) in writeFile "/home/dogi/.conky_weather/parsed" $ fromMaybe "" y)
+    weatherForecast >>= (\x -> let y = x >>= (\z -> return $ unlines $ map unlines z) in writeFile "/home/me/.conky_weather/parsed" $ fromMaybe "" y)
     
     -- Need x -> let y = x >>= instead of just x -> x >>= possibly because the let statement lets
     -- the compiler infer the return type of x >>= (\z -> ...), whereas without the let, the compiler
